@@ -1,0 +1,69 @@
+#!/bin/bash
+
+###################################################
+# Initialization section                          #
+###################################################
+
+#move to script dir
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$CURRENT_DIR"
+
+#enable gui
+export USE_ZENITY=true
+
+#include libraries
+source ../share/esmasoft/osmview/config.sh
+source ../share/esmasoft/osmview/common.sh
+
+
+###################################################
+# OSMView maps section                            #
+###################################################
+
+osmview_maps()
+{
+    export ES_MAPS_DATE=$(wget "$ES_MAPS_URL_DATE" -q -O -)
+    export ES_MAPS_SHA1=$(wget "$ES_MAPS_URL_CHECKSUM" -q -O -)
+
+    wt_download "$ES_MAPS_URL_DATA" "$ES_CACHE_DIR/$ES_MAPS_FILENAME" "Downloading map from $ES_MAPS_DATE" "$ES_MAPS_SHA1"
+
+    es_common_get_sha1sum "$ES_CACHE_DIR/$ES_MAPS_FILENAME"
+    CHECKSUM_CACHE="$ES_TEMPVAR_SHA1SUM"
+
+    es_common_get_sha1sum "$ES_INSTALL_DIR/data/$ES_MAPS_FILENAME"
+    CHECKSUM_INSTALLED="$ES_TEMPVAR_SHA1SUM"
+
+    if [ "$_W_gotsum"x != "$_W_checksum"x ]; then
+        cp "$ES_CACHE_DIR/$ES_MAPS_FILENAME" "$ES_INSTALL_DIR/data/$ES_MAPS_FILENAME"
+    fi
+  
+}
+
+###################################################
+# OSMView  section                                #
+###################################################
+
+osmview_run()
+{
+	cd "$ES_INSTALL_DIR"
+	env WINEPREFIX="$ES_WINE_DIR" LANG=ru_RU.utf8 wine ./Kasnerik.exe &
+}
+
+
+###################################################
+# Main section                                    #
+###################################################
+
+main()
+{
+    es_version_checkInstalled
+    if es_version_isUpdateNeeded; then
+        es_installation
+    fi
+    
+    osmview_maps
+
+    osmview_run
+}
+
+main

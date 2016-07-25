@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=OSMView
+Exec=/usr/bin/osmview run
+Icon=/usr/share/esmasoft/osmview/osmview.png
+Type=Application
+Terminal=false

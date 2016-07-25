@@ -1,0 +1,14 @@
+Source: osmview
+Section: utils
+Priority: optional
+Maintainer: Mikhail Paulyshka <me@mixaill.tk>
+Build-Depends: debhelper (>=9)
+Standards-Version: 3.9.7
+Homepage: http://esmasoft.com/
+
+
+Package: osmview
+Architecture: any
+Depends: bash (>=4.2), cabextract, winehq-staging | winehg-devel | wine-development | wine, unzip, wget, zenity, language-pack-ru, ${misc:Depends}
+Description: Simple OSM map viewer
+ Simple OSM map viewer
